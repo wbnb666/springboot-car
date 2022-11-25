@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+   *{
+     margin: 0;
+     padding: 0;
+   }
+
+   .top{
+     border: 0px solid black;
+     position: fixed;
+     width: 100%;
+     height: 80px;
+     background-color: black;
+   }
+
+   /*body{*/
+   /*  background: url("https://www.bmw.com.cn/content/dam/bmw/marketCN/common/all-models/m-series/XM/2022/20220927/XM_inform_head_KV.jpg/jcr:content/renditions/cq5dam.resized.img.1680.large.time1664323987895.jpg") center center no-repeat;*/
+   /*  background-size: cover;*/
+   /*  !*background-attachment: fixed;*!*/
+   /*}*/
+
+ .title{
+   border: 1px gainsboro solid;
+   width: 100%;
+   height: 125px;
+   background-color: white;
+   position: absolute;
+   top:934px;
+   overflow: hidden;
+ }
+
+ .line{
+   border: 0px;
+   width: 1px;
+   height: 55px;
+
+   background-color: gainsboro;
+   position: absolute;
+left: 240px;
+   top: 70px;
+
+ }
+
+ .line1{
+     width: 1200px;
+     height: 1px;
+
+     background-color: black;
+     position: absolute;
+     left: 150px;
+     top: 50px;
+ }
+
+ .black{
+     width: 50px;
+     height: 10px;
+     background-color: black;
+ }
+
+ .bottom{
+     width: 100%;
+     height: 180px;
+     position: absolute;
+     top: 2161px;
+     background-color: gainsboro;
+ }
+   #pictureone:hover{
+       animation: move .5s linear forwards;
+   }
+
+   #picturetwo:hover {
+       animation: move .5s linear forwards;
+   }
+
+   #picturethree:hover {
+       animation: move .5s linear forwards;
+   }
+   @keyframes move {
+       0% {
+           transform: scale(1);
+       }
+
+       100% {
+           transform: scale(1.05);
+       }
+   }
+</style>
+<body style="height: 100%;width: 100%;background-color: black">
+<div id="car" style="height: 100%;width: 100%">
+  <div class="top" style="position: fixed;z-index: 9">
+      <span style="color: white;position: fixed;left: 35px;font-size: 30px;top:20px">
+          <a href="/pages/home.jsp" style="text-decoration: none;color: white">Car purchase recommendation</a>
+      </span>
+  </div>
+
+  <img style="position: absolute;width: 100%;height:1000px;" :src="this.carphoto.overall">
+    <button style="cursor: pointer;width: 180px;height: 60px;background-color: gainsboro;border: gainsboro;position: absolute;top: 340px;left: 170px;font-weight: bolder;font-size: 20px" @click="addFavor">点击收藏</button>
+  <span style="top:210px;left:170px;position: absolute;color: white;font-size: 60px;">{{this.cardata.carname}}</span>
+  <span style="top:290px;left:170px;position: absolute;color: white;font-size: 30px;">预售价:￥{{this.cardata.price}}</span>
+
+   <div class="title">
+   <span style="position: absolute;top:90px;font-size: 20px;left: 150px">概述</span>
+   <span style="position: absolute;top:90px;font-size: 20px;left: 290px;font-weight: bolder">{{this.cardata.carname}}</span>
+       <div class="black" style="position: absolute;left: 145px;top: 120px"></div>
+     <span class="line"></span>
+   </div>
+
+  <div style="width: 100%;height: 1100px;background-color: white;position: absolute;top: 1061px">
+      <div style="width: 500px;height: 250px;background-color: white;overflow:hidden;position: absolute;left: 100px;top: 100px;text-align: center">
+      <span style="font-weight: bolder;font-size: 35px;">雄姿凛凛，内力惊人</span><br><br>
+          <span style="font-size: 18px">{{this.cardata.description}}</span>
+      </div>
+      <img id="pictureone" :src="this.carphoto.overall" style="width: 700px;height: 500px;position: absolute;left: 650px;top: 100px">
+      <img id="picturetwo" :src="this.carphoto.front" style="width: 500px;height: 400px;position: absolute;left: 100px;top: 351px">
+      <img id="picturethree" :src="this.carphoto.rear" style="width: 700px;height: 400px;position: absolute;left: 650px;top: 621px">
+
+      <div style="position: absolute;top: 851px;left:100px ;width: 500px;height: 200px;overflow: hidden;text-align: left;background-color: white">
+        <span style="font-weight: bolder;font-size: 35px">M Power，惊雷掣电</span><br>
+          <span style="color:black;font-size: 19px">
+              创新{{this.cardata.carname}}是M高性能传奇与X强悍基因的天作之合。一键即可切换纯电驱动与混动模式，随时随地实现毫不妥协的{{this.cardata.carname}}高性能运动驾驶体验。
+          </span>
+      </div>
+  </div>
+
+    <div class="bottom">
+        <span style="position: absolute ;top: 10px;left:550px;color: grey;font-size: 25px">Car Purchase Recommendation</span>
+        <div class="line1"></div>
+            <span style="font-weight: bolder;font-size: 25px;position: absolute;top:60px;left: 250px;color: #aaaaaa">致电我们</span>
+        <el-button icon="el-icon-phone" style="background-color:rgba(220, 220, 220,0.0);border: 0px; position: absolute ;left:250px;top:92px;font-size: 17px;"><br>PHONE</el-button>
+            <span style="font-weight: bolder;font-size: 25px;position: absolute;top:60px;left: 530px;color: #aaaaaa">电子邮箱</span>
+        <el-button icon="el-icon-s-promotion" style="background-color:rgba(220, 220, 220,0.0);border: 0px; position: absolute ;left:525px;top:92px;font-size: 17px;"><br>EMAIL</el-button>
+        <span style="font-weight: bolder;font-size: 25px;position: absolute;top:60px;left:810px;color: #aaaaaa">联系客服</span>
+        <el-button icon="el-icon-chat-dot-round" style="background-color:rgba(220, 220, 220,0.0);border: 0px; position: absolute ;left:800px;top:92px;font-size: 17px;"><br>CONTACT</el-button>
+        <span style="font-weight: bolder;font-size: 25px;position: absolute;top:60px;left: 1100px;color: #aaaaaa">地理位置</span>
+        <el-button icon="el-icon-location-information" style="background-color:rgba(220, 220, 220,0.0);border: 0px; position: absolute ;left:1100px;top:92px;font-size: 17px;"><br>Position</el-button>
+        <font color="grey" style="position: absolute;left:470px;top:153px"> 版权所有Copyright 2022-2022&copy;, All Rights Reserved XXXXXXXXXX</font>
+    </div>
+</div>
+
+</body>
+<script src="../js/axios-0.18.0.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+<script>
+
+   let v = new Vue({
+     el:"#car",
+     mounted(){
+
+         var url = decodeURI(location.search)//获取url中"?"符后的字串 ('?modFlag=business&role=1')
+         if (url.indexOf('?') != -1) {
+             var str = url.substr(1) //substr()方法返回从参数值开始到结束的字符串；
+             var strs = str.split('&')
+             for (var i = 0; i < strs.length; i++) {
+                 this.id = strs[i].split('=')[1]
+             }
+         }
+         this.getOne()
+
+     },
+     data(){
+       return{
+           id:0,
+
+           cardata:{},
+
+           carphoto:{},
+       }
+     },
+     methods:{
+         addFavor(){
+             axios.post("/favor/addFavor?carid="+this.id).then((resp)=>{
+                 console.log(resp.data)
+                 if(resp.data.flag==true){
+                     this.$message({
+                         message: resp.data.msg,
+                         type: 'success'
+                     });
+                 }else {
+                     // alter(resp.data.msg)
+                     this.$message({
+                         // message: '您尚未登录！！'
+                         message: resp.data.msg,
+                     });
+                 }
+
+             })
+         },
+         getOne(){
+             axios.post("/cars/getOne?id="+this.id).then(resp=>{
+                 console.log(resp.data)
+                 this.cardata=resp.data.data[0].data;
+                 console.log(this.cardata)
+                 this.carphoto=resp.data.data[1].data;
+                 console.log(this.carphoto)
+             })
+         }
+
+     }
+   })
+</script>
+</html>

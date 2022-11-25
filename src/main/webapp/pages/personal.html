@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+.top{
+    border: 0px solid black;
+    position: absolute;
+    width: 100%;
+    height: 80px;
+    background-color: black;
+}
+.left{
+    border: 0px solid black;
+    border-radius: 10px;
+    position: absolute;
+    height: 630px;
+    width: 250px;
+    left: 30px;
+    top: 100px;
+     background-color: black;
+    overflow: hidden;
+}
+.right1{
+    border: 0px solid black;
+    width: 80%;
+    border-radius: 10px;
+    height: 630px;
+    background-color: gainsboro;
+    position: absolute;
+    left: 300px;
+    top:100px;
+    overflow: hidden;
+}
+.right2{
+    border: 0px solid black;
+    width: 80%;
+    border-radius: 10px;
+    height: 630px;
+    background-color: gainsboro;
+    position: absolute;
+    left: 300px;
+    top:100px;
+    overflow: hidden;
+}
+
+.right3{
+    border: 0px solid black;
+    width: 80%;
+    border-radius: 10px;
+    height: 630px;
+    background-color: gainsboro;
+    position: absolute;
+    left: 300px;
+    top:100px;
+    overflow: hidden;
+}
+
+
+
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+</style>
+
+<body style="height: 100%">
+<div id="customer">
+
+<div class="top">
+    <span style="color: white;position: absolute;left: 35px;font-size: 30px;top:20px"><a href="home.jsp" style="text-decoration: none;color: white">Car purchase recommendation</a></span>
+</div>
+
+    <div id="message1" class="right1">
+        <span style="position: absolute;left: 20px;top:30px;font-size: 30px;color: black;font-weight: bolder">基本资料</span>
+
+
+
+             <span style="position: absolute;left:20px;top:170px;font-size: 20px;" >姓名:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<span style="font-weight: bolder;font-size: 22px">{{user.name}}</span></span>
+        <span style="position: absolute;left:20px;top:270px;font-size: 20px">性别:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<span style="font-weight: bolder;font-size: 22px">{{user.sex}}</span></span>
+        <span style="position: absolute;left:20px;top:370px;font-size: 20px">用户名:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<span style="font-weight: bolder;font-size: 22px">{{user.username}}</span></span>
+        <span style="position: absolute;left:20px;top:470px;font-size: 20px">手机号:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<span style="font-weight: bolder;font-size: 22px">{{user.phone}}</span></span>
+        <span style="position: absolute;left:20px;top:570px;font-size: 20px">个人喜好:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<span style="font-weight: bolder;font-size: 22px">{{user.hobby}}</span></span>
+    </div>
+
+    <div id="message2" style="display: none" class="right2">
+
+        <span style="position: absolute;left: 412px;top: 210px;font-size: 14px;color: rgba(240,128,130,1.5);display: none" id="tip" >密码为6-12位字符</span>
+        <span style="position: absolute;left: 20px;top:30px;font-size: 30px;color: black;font-weight: bolder">密码管理</span>
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" style="position: absolute;top: 200px">
+
+            <el-form-item label="原密码" prop="prePass" style="position: absolute;top: -70px">
+                <el-input type="password" v-model="ruleForm.prePass" style="width: 300px"/>
+            </el-form-item>
+
+            <el-form-item label="密码" prop="pass" >
+                <el-input type="password" v-model="ruleForm.pass" autocomplete="off" id="password" style="width: 300px"/>
+            </el-form-item>
+
+            <el-form-item label="确认密码" prop="checkPass"style="position: absolute;top: 70px">
+                <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"  style="width: 300px"/>
+            </el-form-item>
+
+            <el-form-item label="验证码" prop="checkCode" style="position: absolute;top: 140px">
+                <el-input type="text" v-model="ruleForm.checkCode" autocomplete="off"  style="width: 180px"/>
+            </el-form-item>
+
+
+            <div style="position: absolute;top:130px;left:300px;width: 100px">
+                <img id="codeImg" style="" src="/check">
+            </div>
+            <div style="position: absolute;top:160px;left:410px;width: 50px">
+                <a href="#" style="color: #8cc5ff;font-size: 3px" id="nolook">看不清</a>
+            </div>
+
+            <el-form-item style="position: absolute;top: 210px">
+                <el-button type="primary" @click="updaetePwd('ruleForm')">提交</el-button>
+                <el-button @click="resetForm('ruleForm')">重置</el-button>
+            </el-form-item>
+
+        </el-form>
+
+
+    </div>
+
+    <div id="message3" style="display: none" class="right3">
+        <span style="position: absolute;left: 20px;top:30px;font-size: 30px;color: black;font-weight: bolder">修改信息</span>
+        <form action="/user/updateUserInfo" method="post" id="msg">
+            <span style="position: absolute;left:52px;top:170px;font-size: 20px">姓名
+                <input type="text" id="name" name="name" style="width: 250px;height: 35px;border:white;border-left: white 10px solid;position: absolute;left: 60px;border-radius: 3px"></span>
+            <span style="position: absolute;left:52px;top:270px;font-size: 20px">性别
+                <input type="radio" id="male" name="sex"  value="1" style="border: black;position: absolute;left: 90px;top: 7px;border-radius: 3px;border:white;border-left: white 10px solid;"><label style="position: absolute;left: 65px" for="male" value="man">男</label>
+                <input type="radio" id="female" name="sex" value="0" style="border: black;position: absolute;left: 170px;top: 7px;border-radius: 3px;border:white;border-left: white 10px solid;"><label style="position: absolute;left: 148px" for="female" value="woman">女</label>
+            </span>
+
+            <span style="position: absolute;left: 385px;top: 375px;color: red ;display: none" id="phonetest">手机号不规范</span>
+
+            <span style="position: absolute;left:38px;top:370px;font-size: 20px">手机号
+           <input  type="text" id="phone" name="phone"  style="width: 250px;height: 35px;border: 0px solid black;position: absolute;left: 75px;border-radius: 3px;border-left: white 10px solid;"></input>
+            </span>
+
+
+            <span style="position: absolute;left:20px;top:470px;font-size: 20px">个人喜好
+                <input type="text" name="hobby"  id="hobby" style="width: 250px;height: 35px;border: black;position: absolute;left: 95px;border-radius: 3px;border:white;border-left: white 10px solid;"></span>
+        <input type="submit" style="position: absolute;top: 540px;width: 70px;height: 40px;left: 140px;background-color: #3a8ee6;border: #3a8ee6;color: white;border-radius: 5px" value="提交"></input>
+<!--        <input type="reset" style="position: absolute;top: 540px;width: 70px;height: 40px;left: 190px" value="重置"></input>-->
+         </form>
+
+    </div>
+
+
+<div class="left">
+    <el-button type="primary" icon="el-icon-user-solid"
+               style="background-color:black;border: 0px; position: absolute ;left:35px;top:45px;color: white;font-size: 40px;" >
+   <br><span style="font-size: 20px">{{user.name}}</span></el-button>
+        <el-row class="tac" style="width: 100%">
+        <el-col :span="12" style="width: 100%;position: absolute;top:180px">
+            <el-menu style="width: 100%"
+                    default-active="1"
+                    class="el-menu-vertical-demo"
+                    @open="handleOpen"
+                    @close="handleClose"
+                    background-color="black"
+                    text-color="white"
+                    active-text-color="#ffd04b">
+
+                <el-menu-item index="1" @click="dis1">
+                    <i class="el-icon-menu"></i>
+                    <span slot="title">基本资料</span>
+                </el-menu-item>
+
+                <el-menu-item index="2" @click="dis2">
+                    <i class="el-icon-document"></i>
+                    <span slot="title">密码管理</span>
+                </el-menu-item>
+
+                <el-menu-item index="3"  @click="dis3">
+                    <i class="el-icon-setting"></i>
+                    <span slot="title" >修改信息</span>
+                </el-menu-item>
+
+               <a href="carshow.html" style="text-decoration: none"> <el-menu-item index="4" >
+                    <i class="el-icon-menu"></i>
+                    <span slot="title">我的喜欢</span>
+                </el-menu-item></a>
+
+                <el-menu-item index="5"  @click="" v-if="jud">
+                    <i class="el-icon-setting"></i>
+                   <a href="administor.html" style="text-decoration: none;color: white"> <span slot="title" >后台管理</span></a>
+                </el-menu-item>
+
+            </el-menu>
+        </el-col>
+        </el-row>
+
+</div>
+</div>
+
+</body>
+<script src="../js/vue.js"></script>
+<script src="../element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+<script src="../js/axios-0.18.0.js"></script>
+<script>
+
+
+    // 验证码更换
+
+
+  let v = new Vue({
+      el:"#customer",
+      mounted:{
+
+      },
+
+      data(){
+          // 检验原密码不能为空
+          var validatePrePass = (rule, value, callback) => {
+              if (value==='') {
+                  return callback(new Error('原密码不能为空'));
+              }
+              callback();
+          };
+          //校验新密码
+          var validatePass = (rule, value, callback) => {
+              var reg=/^\w{6,12}$/;
+              var flag=reg.test(value.trim());
+              if (value === '') {
+                  callback(new Error('请输入密码'));
+               }else if(!flag){
+                  callback(new Error('设置密码有误'));
+              }
+              else {
+                  if (this.ruleForm.checkPass !== '') {
+                      this.$refs.ruleForm.validateField('checkPass');
+                  }
+                  callback();
+              }
+          };
+
+          var tip=( rule, value, callback)=>{
+              callback(new Error('密码格式为6-12为字母'));
+          };
+
+
+          //校验两次密码输入是否一致
+          var validatePass2 = (rule, value, callback) => {
+                  if (value === '') {
+                      callback(new Error('请再次输入密码'));
+                  } else if (value !== this.ruleForm.pass) {
+                      callback(new Error('两次输入密码不一致!'));
+                  } else {
+                      callback();
+                  }
+          };
+          var validateCheckCode = (rule, value, callback) => {
+              if (!value) {
+                  return callback(new Error('验证码不能为空'));
+              }
+              callback();
+          };
+
+         return {
+             ruleForm: {
+                 prePass:'',
+                 pass: '',
+                 checkPass: '',
+                 checkCode: ''
+             },
+             rules: {
+                 prePass:[
+                     { validator: validatePrePass, trigger: 'blur' },
+                 ],
+                 pass: [
+                     { validator: validatePass, trigger: 'blur' }
+
+                     // { validator: tip,          trigger: 'focus'}
+                 ],
+                 checkPass: [
+                     { validator: validatePass2, trigger: 'blur' }
+                 ],
+                 checkCode: [
+                     { validator: validateCheckCode, trigger: 'blur' }
+                 ]
+             },
+
+             jud:false,
+             imageUrl: '',
+
+             username:'冯嘉豪',
+
+             user:{},
+             update:{},
+
+
+
+
+        };
+      },
+      created(){
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+              var kv = cookies[i].split('=');
+              if (kv[0].trim() === 'update_msg') {
+                  this.$message({
+                      message: '修改成功！！',
+                      type: 'success'
+                  });
+                  break;
+              }
+          }
+
+
+            this.getUsrInfo();
+      },
+      methods:{
+          updaetePwd(formName) {
+              this.$refs[formName].validate((valid) => {
+                  if (valid) {
+                      axios.post("/user/updatePwd",this.ruleForm).then((resp)=>{
+                          console.log(resp.data);
+                          if(resp.data==='success'){
+                              this.$alert('立即返回登录界面', '修改成功！', {
+                                  confirmButtonText: '确定',
+                              }).then(() => {
+                                  location.href='/pages/login.jsp';
+                              });
+                          }else if(resp.data==='ErrorPrePass'){
+                              this.$message.error({
+                                  message: '修改失败,原密码输入错误!',
+                                  type: 'info'
+                              });
+                          }else {
+                              this.$message.error({
+                                  message: '修改失败,验证码输入错误!',
+                                  type: 'info'
+                              });
+                          }
+                      })
+                      // alert('修改成功!');
+                  } else {
+                      console.log('error submit!!');
+                      return false;
+                  }
+              });
+          },
+          resetForm(formName) {
+              this.$refs[formName].resetFields();
+          },
+          getUsrInfo(){
+              axios.get("/user/getUsrInfo").then((resp)=>{
+                  this.user = resp.data;
+                  this.update=resp.data;
+                  if(this.user.type=='1')
+                      this.jud=true;
+                  else
+                      this.jud=false;
+              })
+          },
+          handleOpen(key, keyPath) {
+              console.log(key, keyPath);
+          },
+          handleClose(key, keyPath) {
+              console.log(key, keyPath);
+          },
+          dis1(){
+              console.log(this.user)
+              document.getElementById("phonetest").style.display="none";
+              document.getElementById("phone").style.border="0px solid red";
+              document.getElementById("message3").style.display="none";
+              document.getElementById("message2").style.display="none";
+              document.getElementById("message1").style.display="";
+
+
+          },
+          dis2(){
+              document.getElementById("phonetest").style.display="none";
+              document.getElementById("phone").style.border="0px solid red";
+              document.getElementById("message3").style.display="none";
+              document.getElementById("message1").style.display="none";
+              document.getElementById("message2").style.display="";
+          },
+          dis3(){
+              document.getElementById("message1").style.display="none";
+              document.getElementById("message2").style.display="none";
+              document.getElementById("message3").style.display="";
+              if(this.user.sex=='男')
+                  document.getElementById("male").checked=true;
+              else
+                  document.getElementById("female").checked=true;
+
+              document.getElementById("name").value=this.user.name;
+              document.getElementById("phone").value=this.user.phone;
+              document.getElementById("hobby").value=this.user.hobby;
+          },
+
+
+
+
+      }
+  })
+
+    document.getElementById("codeImg").onclick=function () {
+
+        document.getElementById("codeImg").src = "/check?"+new Date().getMilliseconds();
+    }
+    document.getElementById("nolook").onclick=function () {
+
+        document.getElementById("codeImg").src = "/check?"+new Date().getMilliseconds();
+    }
+
+
+    document.getElementById("password").onfocus=function (){
+            document.getElementById("tip").style.display="";
+    }
+
+    document.getElementById("password").onblur=function (){
+
+        document.getElementById("tip").style.display="none";
+    }
+
+    document.getElementById("msg").onsubmit=function (){
+        var value = document.getElementById("phone").value;
+        var reg=/^[0-9]{11}$/;
+        if(reg.test(value.trim())){
+            return true;
+        }else{
+            document.getElementById("phonetest").style.display="";
+            document.getElementById("phone").style.border="1px solid red";
+            document.getElementById("phone").style.paddingLeft="10px";
+
+            return false;
+        }
+    }
+</script>
+
+</html>
+

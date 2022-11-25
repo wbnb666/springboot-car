@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    .top{
+        border: 0px solid black;
+        width: 100%;
+        height: 80px;
+        background-color: black;
+    }
+
+    .el-table .warning-row {
+        background: white;
+    }
+
+    .el-table .success-row {
+        background: white;
+    }
+
+    a{
+        color: white;
+    }
+    a:hover{
+        color: deepskyblue;
+    }
+</style>
+<body style="height: 100%">
+<div id="search">
+    <div class="top">
+        <span style="color: white;position: absolute;left: 35px;font-size: 30px;top:20px"><a href="home.jsp" style="text-decoration: none;color: white">Car purchase recommendation</a>
+        </span>
+        <a  href="carshow.html"  style="font-size: 20px;float: right;text-decoration: none" > ->我的收藏</a>
+    </div>
+  <br><br>
+    <div style="">
+        <el-form inline="true" ref="form" :model="form" label-width="80px">
+
+            <el-form-item label="汽车描述">
+                <el-input v-model="form.search"></el-input>
+            </el-form-item>
+
+            <el-form-item label="汽车类型">
+                <el-select v-model="form.models" placeholder="请选择汽车类型">
+                    <el-option label="全部车型" value="全部车型"></el-option>
+                    <el-option label="跑车" value="跑车"></el-option>
+                    <el-option label="轿车" value="轿车"></el-option>
+                    <el-option label="SUV" value="SUV"></el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="预估价格">
+                <el-col :span="11">
+                    <el-input v-model="form.min" placeholder="最低价格"></el-input>
+                </el-col>
+
+                <el-col class="line" :span="1">-</el-col>
+
+                <el-col :span="11">
+                    <el-input v-model="form.max"  placeholder="最高价格"></el-input>
+                </el-col>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="Search()">搜索</el-button>
+            </el-form-item>
+        </el-form>
+</div>
+
+    <div style="">
+        <template>
+            <el-table
+                    :data="tableData"
+                    style="width: 100%"
+                    :row-class-name="tableRowClassName">
+
+                <el-table-column
+                        prop="photo"
+                        label=""
+                        width="480"
+                        align="center">
+                    <template slot-scope="scope">
+                        <img style="width: 310px;height: 220px;text-decoration: none;cursor: pointer" :src="carurl[scope.$index]" @click="gotodetail(scope.row.id)">
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        prop="models,carname,description,price"
+                        label=""
+                        width="1030"
+                       >
+                    <template slot-scope="scope">
+                        <span style="font-size: 20px;position: absolute;top:20px;font-weight: bolder">
+                            {{scope.row.models}}
+                        </span><br>
+                        <span style="font-size: 15px;position:absolute;top: 65px">
+                            {{scope.row.carname}}
+                        </span><br>
+                        <span style=""><br><br>
+                            {{scope.row.description}}
+                        </span><br>
+                        <span style="position: absolute;top:20px;left: 390px;font-size: 20px;font-weight: bolder">
+                            预估价格<br>
+                        </span>
+                        <span style="font-size: 17px;position: absolute;top: 60px;left: 390px">
+                            {{scope.row.price}}￥
+                        </span>
+                        <el-button   icon="el-icon-star-off"
+                                     style="width: 100px;height: 50px;position: absolute;top: 15px;left: 700px;border-radius: 103px;background-color: white;border: 0px;color: black"
+                                     @click="addFavor(scope.row.id)">
+                            收藏
+                        </el-button>
+                        <el-button  icon="el-icon-view"  @click="gotodetail(scope.row.id)" style="text-decoration: none;position: absolute;top: 20px;left: 900px;">查看详情</el-button>
+                    </template>
+                </el-table-column>
+
+
+
+
+
+            </el-table>
+        </template>
+
+    </div>
+    <div class="block" style="">
+
+        <el-pagination
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-size="5"
+                layout="total, prev, pager, next, jumper"
+                :total="totalCount">
+        </el-pagination>
+    </div>
+</div>
+<script src="../js/axios-0.18.0.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+<script>
+    let v = new Vue({
+        el:"#search",
+        data(){
+            return{
+                form: {
+                    search: '',
+                    models: '',
+                    min: '',
+                    max: '',
+                    current:'',
+                },
+                onform:{
+                    search: '',
+                    models: '',
+                    min: '',
+                    max: '',
+                    current:'',
+                },
+                tableData: [],//展示当前搜索所得数据
+                carurl:[],//显示照片
+                currentPage: 1,
+                totalCount: 0,
+
+            }
+        },
+        created() {
+            // 页面加载完成后，发送异步请求，查询数据
+            var url = decodeURI(location.search)//获取url中"?"符后的字串 ('?modFlag=business&role=1')
+            if (url.indexOf('?') != -1) {
+                var str = url.substr(1) //substr()方法返回从参数值开始到结束的字符串；
+                var strs = str.split('&')
+                for (var i = 0; i < strs.length; i++) {
+                    this.form.search = strs[i].split('=')[1]
+                    // console.log(this.form.search)
+                }
+            }
+            this.likesearch()
+        },
+        methods:{
+
+            Search(){
+                this.currentPage=1;
+                this.likesearch();
+            },
+
+
+            onSumit(){
+              this.likesearch()
+            },
+            addFavor(carid){
+                axios.post("/favor/addFavor?carid="+carid).then((resp)=>{
+                    console.log(resp.data)
+                    if(resp.data.flag==true){
+                        this.$message({
+                            message: resp.data.msg,
+                            type: 'success'
+                        });
+                    }else {
+                        this.$message({
+                                message: resp.data.msg,
+                        });
+                    }
+
+                })
+            },
+
+            likesearch(){
+                this.form.current=this.currentPage
+                axios.post("/cars/getSearch",this.form).then((resp)=>{
+                    let arr = resp.data.data;
+                    this.tableData = arr[0].data.records;
+                    this.currentPage = arr[0].data.current;
+                    this.totalCount = arr[0].data.total;
+                    this.carurl = arr[1].data;
+                })
+            },
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex === 1) {
+                    return 'warning-row';
+                } else if (rowIndex === 3) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            //当前的页码
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.likesearch();
+            },
+            gotodetail(id){
+                location.href="cardetail.html?id="+id;
+            }
+        }
+    })
+</script>
+</body>
+</html>
