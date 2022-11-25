@@ -10,6 +10,7 @@ public class CarApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CarApplication.class, args);
+        System.out.println("now i using git!! and you can come with me!");
 
     }
 
