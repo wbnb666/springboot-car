@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 
 
-  <style>
-    *{
-      margin: 0;
-      padding: 0;
-    }
-    .el-table .warning-row {
-      background: white ;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-    .el-table .success-row {
-      background: ghostwhite;
-    }
+        .el-table .warning-row {
+            background: white;
+        }
 
-    .top{
-      border: 0px solid black;
-      position: fixed;
-      width: 100%;
-      height: 80px;
-      background-color: black;
-    }
-  </style>
+        .el-table .success-row {
+            background: ghostwhite;
+        }
+
+        .top {
+            border: 0px solid black;
+            position: fixed;
+            width: 100%;
+            height: 80px;
+            background-color: black;
+        }
+    </style>
 
 </head>
 
@@ -33,48 +34,51 @@
 
 <div id="app">
 
-  <div class="top" style="position: fixed;z-index: 1">
-    <span style="color: white;position: fixed;left: 35px;font-size: 30px;top:20px"><a href="home.jsp" style="text-decoration: none;color: white">Car purchase recommendation</a></span>
-  </div>
-  <div style="width: 100%;height: 85px;background-color: white" ></div>
-  <!--搜索表单-->
-  <el-form inline="true" ref="form" :model="form" label-width="80px">
-    <el-form-item  label="汽车名称">
-      <el-input v-model="form.carname" placeholder="请输入汽车名称"></el-input>
-    </el-form-item>
+    <div class="top" style="position: fixed;z-index: 1">
+        <span style="color: white;position: fixed;left: 35px;font-size: 30px;top:20px"><a href="home.jsp"
+                                                                                          style="text-decoration: none;color: white">Car purchase recommendation</a></span>
+    </div>
+    <div style="width: 100%;height: 85px;background-color: white"></div>
+    <!--搜索表单-->
+    <el-form inline="true" ref="form" :model="form" label-width="80px">
+        <el-form-item label="汽车名称">
+            <el-input v-model="form.carname" placeholder="请输入汽车名称"></el-input>
+        </el-form-item>
 
-    <el-form-item label="汽车描述">
-      <el-input v-model="form.description" placeholder="请输入汽车描述"></el-input>
-    </el-form-item>
+        <el-form-item label="汽车描述">
+            <el-input v-model="form.description" placeholder="请输入汽车描述"></el-input>
+        </el-form-item>
 
-    <el-form-item  label="车型">
-      <el-select v-model="form.models" placeholder="请选择车型">
-        <el-option label="全部车型" value="" ></el-option>
-        <el-option label="轿车" value="轿车"></el-option>
-        <el-option label="SUV" value="SUV"></el-option>
-        <el-option label="跑车" value="跑车"></el-option>
-      </el-select>
-    </el-form-item>
+        <el-form-item label="车型">
+            <el-select v-model="form.models" placeholder="请选择车型">
+                <el-option label="全部车型" value=""></el-option>
+                <el-option label="轿车" value="轿车"></el-option>
+                <el-option label="SUV" value="SUV"></el-option>
+                <el-option label="跑车" value="跑车"></el-option>
+            </el-select>
+        </el-form-item>
 
-    <el-form-item>
-      <el-button type="primary" @click="Search()"  style="background-color: grey;border: black">查询</el-button>
-    </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="Search()" style="background-color: grey;border: black">查询</el-button>
+        </el-form-item>
 
-  </el-form>
+    </el-form>
 
-  <!--按钮-->
-  <el-row>
-    <el-button type="primary" size="medium" @click="deletebyids" style="margin-left: 10px;background-color: black;border: black">批量删除</el-button>
-    <el-button type="info" size="medium" @click="dialogVisible = true" >添加品牌</el-button>
-  </el-row>
+    <!--按钮-->
+    <el-row>
+        <el-button type="primary" size="medium" @click="deletebyids"
+                   style="margin-left: 10px;background-color: black;border: black">批量删除
+        </el-button>
+        <el-button type="info" size="medium" @click="dialogVisible = true">添加品牌</el-button>
+    </el-row>
 
 
-  <!--    表单-->
-  <el-dialog
-          title="添加品牌"
-          :visible.sync="dialogVisible"
-          width="30%"
-          :before-close="handleClose">
+    <!--    表单-->
+    <el-dialog
+            title="添加品牌"
+            :visible.sync="dialogVisible"
+            width="30%"
+            :before-close="handleClose">
         <span>
            <!--    表单-->
     <el-form ref="form" :model="form" label-width="80px">
@@ -93,130 +97,138 @@
 
         <el-form-item label="汽车类型">
             <el-select v-model="form.models" placeholder="请选择汽车类型">
-                <el-option label="SUV" value="SUV" ></el-option>
+                <el-option label="SUV" value="SUV"></el-option>
                 <el-option label="小轿车" value="轿车"></el-option>
                 <el-option label="跑车" value="跑车"></el-option>
             </el-select>
         </el-form-item><br>
 
-   <el-form-item label="图片">
-            <el-input type="textarea" disabled placeholder="图片请联系后台管理员添加"></el-input>
+        <el-form-item label="图片">
+            <el-upload class="upload"
+                       list-type="picture"
+                       ref="upload"
+                       action="string"
+                       :limit="3"
+                       :on-exceed="handleExceed"
+                       :file-list="fileList"
+                       :auto-upload="false"
+                       :http-request="uploadFile"
+                       :on-change="handleChange"
+            >
+                <div slot="tip" class="el-upload__tip">只能上传png文件，且不超过10mb(先后上传车身，车头，车尾图)</div>
+                <el-button size="small" type="primary">选取文件</el-button>
+            </el-upload>
         </el-form-item><br>
 
         <el-form-item>
             <el-button type="primary" @click="addCar" style="background-color: black;border: black">立即创建</el-button>
-            <el-button  @click="dialogVisible = false" >取消</el-button>
+            <el-button @click="dialogVisible = false">取消</el-button>
         </el-form-item>
     </el-form>
         </span>
-  </el-dialog>
+    </el-dialog>
 
 
+    <!--表格-->
 
-  <!--表格-->
+    <template>
+        <el-table
+                ref="multipleTable"
+                :data="tableData"
+                style="width: 100%"
+                :row-class-name="tableRowClassName"
+                @selection-change="handleSelectionChange">
 
-  <template>
-    <el-table
-            ref="multipleTable"
-            :data="tableData"
-            style="width: 100%"
-            :row-class-name="tableRowClassName"
-            @selection-change="handleSelectionChange">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
 
-      <el-table-column
-              type="selection"
-              width="55">
-      </el-table-column>
+            <el-table-column
+                    type="index"
+                    label="序号"
+                    width="50"
+                    align="center">
+            </el-table-column>
 
-      <el-table-column
-              type="index"
-              label="序号"
-              width="50"
-              align="center">
-      </el-table-column>
+            <el-table-column
+                    prop="picture"
+                    label="照片"
+                    align="center"
+                    width="300">
+                <template slot-scope="scope">
+                    <img style="width: 290px;height: 200px" :src="carurl[scope.$index].overall">
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="carname"
+                    label="汽车名称"
+                    align="center">
+            </el-table-column>
+            <el-table-column
+                    prop="price"
+                    label="汽车价格"
+                    align="center"
+            >
+                <template slot-scope="scope">
+                    <span>￥{{scope.row.price}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="models"
+                    label="汽车类型"
+                    align="center">
+            </el-table-column>
+            <el-table-column
+                    prop="description"
+                    label="描述"
+                    align="center"
+                    width="300px">
+            </el-table-column>
+            <el-table-column
 
-      <el-table-column
-              prop="picture"
-              label="照片"
-              align="center"
-              width="300">
-        <template slot-scope="scope">
-            <img style="width: 290px;height: 200px;cursor: pointer" :src="carurl[scope.$index].overall" @click="gotodetail(carurl[scope.$index].carid)">
-        </template>
-      </el-table-column>
-      <el-table-column
-              prop="carname"
-              label="汽车名称"
-              align="center">
-          <template scope="scope">
-              <span style="cursor: pointer" @click="gotodetail(scope.row.id)">{{scope.row.carname}}</span>
-          </template>
-      </el-table-column>
+                    label="操作"
+                    align="center">
+                </el-row>-->
+                <template slot-scope="scope">
+                    <el-button
 
-
-      <el-table-column
-              prop="price"
-              label="汽车价格"
-              align="center"
-             >
-        <template slot-scope="scope">
-          <span>￥{{scope.row.price}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-              prop="models"
-              label="汽车类型"
-              align="center">
-      </el-table-column>
-      <el-table-column
-              prop="description"
-              label="描述"
-              align="center"
-              width="300px">
-      </el-table-column>
-      <el-table-column
-
-              label="操作"
-              align="center">
-        </el-row>-->
-        <template slot-scope="scope">
-          <el-button
-
-                  type="primary"
-                  @click="handleEdit(scope.row)" style="background-color: grey;border: grey  ">修改</el-button>
+                            type="primary"
+                            @click="handleEdit(scope.row)" style="background-color: grey;border: grey  ">修改
+                    </el-button>
 
 
-          <el-button
+                    <el-button
 
-                  type="danger"
-                  @click="handleDelete(scope.row.id)" style="border: black">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-
-  </template>
+                            type="danger"
+                            @click="handleDelete(scope.row.id)" style="background-color: black;border: black">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
 
 
+    </template>
 
-  <!--    分页-->
 
-  <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[5, 10, 15, 20]"
-          :page-size="sizePage"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="TotalCount">
-  </el-pagination>
+    <!--    分页-->
 
-  <!--    修改表单-->
-  <el-dialog
-          title="修改品牌"
-          :visible.sync="updatedialogVisible"
-          width="30%"
-          :before-close="handleClose">
+    <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[5, 10, 15, 20]"
+            :page-size="sizePage"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="TotalCount">
+    </el-pagination>
+
+    <!--    修改表单-->
+    <el-dialog
+            title="修改品牌"
+            :visible.sync="updatedialogVisible"
+            width="30%"
+            :before-close="handleClose">
         <span>
            <!--    表单-->
     <el-form ref="form" :model="updateform" label-width="80px">
@@ -228,7 +240,7 @@
             <el-input v-model="updateform.price"></el-input>
         </el-form-item><br>
 
-     <el-form-item  label="汽车类型">
+     <el-form-item label="汽车类型">
       <el-select v-model="updateform.models" placeholder="请选择车型">
         <el-option label="小轿车" value="轿车"></el-option>
         <el-option label="SUV" value="SUV"></el-option>
@@ -245,11 +257,11 @@
         </el-form-item><br>
         <el-form-item>
             <el-button type="primary" @click="updatebrand" style="border: black;background-color: black">修改</el-button>
-            <el-button  @click="updatedialogVisible = false" >取消</el-button>
+            <el-button @click="updatedialogVisible = false">取消</el-button>
         </el-form-item>
     </el-form>
         </span>
-  </el-dialog>
+    </el-dialog>
 
 </div>
 
@@ -259,290 +271,285 @@
 <script src="../js/axios-0.18.0.js"></script>
 
 <script>
-  let v = new Vue({
-    el: "#app",
-    //页面加载后发送异步请求
-    mounted(){
-      this.selectAll();
-    },
-
-    methods:{
-        gotodetail(id){
-            location.href="cardetail.html?id="+id;
+    let v = new Vue({
+        el: "#app",
+        //页面加载后发送异步请求
+        mounted() {
+            this.selectAll();
         },
 
-        Search(){
-          this.currentPage=1;
-          this.selectAll();
-        },
-        selectAll() {
-            this.form.current=this.currentPage;
-            this.form.size=this.sizePage;
-            axios.post("/cars/getAll",this.form).then((resp)=> {
-                //设置表格数据
-                if(resp.data.flag==true){
-                    let arr = resp.data.data;
-                    this.tableData = arr[0].data.records;
-                    this.currentPage = arr[0].data.current;
-                    this.sizePage = arr[0].data.size;
-                    this.TotalCount = arr[0].data.total;
-                    this.carurl = arr[1].data;
-                }else {
-                    this.$message({
-                        message: resp.data.msg,
-                        type: 'info'
-                    });
-                }
-            })
-        },
-
-      //表格
-      tableRowClassName({row, rowIndex}) {
-        if (rowIndex%2 === 0) {
-          return 'warning-row';
-        } else if (rowIndex%2 === 1) {
-          return 'success-row';
-        }
-        return '';
-      },
-
-
-      //    复选框选后执行
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-        console.log(val);
-      },
-
-      //批量删除
-      deletebyids(){
-        this.$confirm('确定删除？','提示',{
-          confirmButtonText:'确定',
-          cancelButtonText:'取消',
-          type:'warning'
-        }).then(()=>{
-          //当用户点击确认后
-          for(var i=0;i<this.multipleSelection.length;i++){
-            let selectment=this.multipleSelection[i];
-            this.selectids[i]=selectment.id;
-          }
-          console.log(this.selectids);
-          //发送ajax请求
-          var _this=this;
-          axios.post("/cars/removeByIds",_this.selectids).then(function (resp){
-            if(resp.data.flag == true){
-              _this.$message({
-                message:"删除成功",
-                type:"success"
-              }),
-              _this.selectAll();
-            }
-          })
-
-        })
-
-
-      },
-
-      //    分页
-      handleSizeChange(val) {
-        this.sizePage=val;
-        console.log(`每页 ${val} 条`);
-        this.selectAll();
-      },
-      handleCurrentChange(val) {
-        this.currentPage=val;
-        console.log(`当前页: ${val}`);
-        this.selectAll();
-      },
-
-
-
-      //分页条件查询
-      /*selectbypageandcondition(){
-        console.log()
-        console.log(this.forms);
-        var _this=this;
-        axios({
-          method:"post",
-          url:"http://localhost:8080/bymyself/brand/selectbypageandcondition?size="+_this.sizepage+"&begin="+_this.currentPage,
-          data:_this.forms
-        }).then(function (resp){
-          _this.brand=resp.data.rows;
-          _this.total=resp.data.total;
-        })
-      },*/
-
-
-      //    表单提交
-      addCar() {
-        console.log(this.form);
-        var _this=this;
-        axios({
-          method: "post",
-          url:"/cars/save",
-          data:_this.form
-        }).then(function (resp){
-          if(resp.data.flag==true){
-            _this.dialogVisible= false,
-            _this.selectAll(),
-            _this.$message({
-                      message: '恭喜你，添加成功',
-                      type: 'success'
-            });
-            _this.form.carname=null;
-            _this.form.price=null;
-            _this.form.models=null;
-            _this.form.description=null;
-
-          }
-        })
-
-      },
-
-      //    弹框
-      handleClose(done) {
-        this.$confirm('确认关闭？')
-                .then(_ => {
-                  done();
+        methods: {
+            Search() {
+                this.currentPage = 1;
+                this.selectAll();
+            },
+            selectAll() {
+                this.form.current = this.currentPage;
+                this.form.size = this.sizePage;
+                axios.post("/cars/getAll", this.form).then((resp) => {
+                    //设置表格数据
+                    if (resp.data.flag == true) {
+                        let arr = resp.data.data;
+                        this.tableData = arr[0].data.records;
+                        this.currentPage = arr[0].data.current;
+                        this.sizePage = arr[0].data.size;
+                        this.TotalCount = arr[0].data.total;
+                        this.carurl = arr[1].data;
+                    } else {
+                        this.$message({
+                            message: resp.data.msg,
+                            type: 'info'
+                        });
+                    }
                 })
-                .catch(_ => {});
-      },
+            },
 
-      //修改数据
-      handleEdit(row) {
-        this.updateform.id=row.id;
-        this.updateform.carname=row.carname;
-        this.updateform.models=row.models;
-        this.updateform.price=row.price;
-        this.updateform.description=row.description;
-        this.updatedialogVisible=true;
-      },
-
-      //删除数据
-      handleDelete(id) {
-/*        console.log(id);
-        this.deletedid=id;*/
-        this.$confirm('确认删除','提示',{
-          confirmButtonText:"确定",
-          cancelButtonText:"取消",
-          type:"warning"
-        }).then(()=> {
-            var _this=this;
-          axios.post("/cars/removeById?id="+id).then(function (resp) {
-              console.log(resp.data)
-            if (resp.data.flag == true) {
-                console.log(resp.data)
-                _this.$message({
-                    message:"删除成功",
-                    type:"success"
-              })
-                _this.selectAll();
-            }
-          })
-        }).catch(()=>{
-          //取消删除
-          this.$message({
-            message:"已取消删除",
-            type:"info"
-          })
-        })
-      },
+            //表格
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex % 2 === 0) {
+                    return 'warning-row';
+                } else if (rowIndex % 2 === 1) {
+                    return 'success-row';
+                }
+                return '';
+            },
 
 
-      //修改数据
-      updatebrand(){
-        var _this=this;
+            //    复选框选后执行
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+                console.log(val);
+            },
 
-        axios({
-          method:"post",
-          url:"/cars/updateById",
-          data:_this.updateform
-        }).then(function (resp){
-          if(resp.data.flag == true){
-            _this.updatedialogVisible= false,
-            _this.$message({
-                      message:"修改成功",
-                      type:"success"
-            }),
-            _this.selectAll();
-          }
-        })
+            //批量删除
+            deletebyids() {
+                this.$confirm('确定删除？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //当用户点击确认后
+                    for (var i = 0; i < this.multipleSelection.length; i++) {
+                        let selectment = this.multipleSelection[i];
+                        this.selectids[i] = selectment.id;
+                    }
+                    console.log(this.selectids);
+                    //发送ajax请求
+                    var _this = this;
+                    axios.post("/cars/removeByIds", _this.selectids).then(function (resp) {
+                        if (resp.data.flag == true) {
+                            _this.$message({
+                                message: "删除成功",
+                                type: "success"
+                            }),
+                                _this.selectAll();
+                        }
+                    })
 
-      },
-
-      //id查询
-      /*selectbyid(id){
-        var _this=this;
-        console.log(id);
-        axios ({
-          method:"post",
-          url:"http://localhost:8080/bymyself/brand/selectbyid",
-          data:id
-        }).then(function (resp){
-          _this.form=resp.data
-        })
-      }*/
-    },
-
-    data(){
-      return{
-
-       form:{
-           carname:'',
-           description:'',
-           models:'',
-           price:'',
-           current:this.currentPage,
-           size:this.sizePage
-       },
-
-       updateform:{
-           id:0,
-           carname:'',
-           description:'',
-           models:'',
-           price:'',
-       },
-
-        tableData: [],
-
-        carurl:[],
-
-        //复选框数组
-        multipleSelection: [],
-        selectids:[],
-
-        //分页总数
-        currentPage: 1,
-        sizePage:5,
-        TotalCount:0,
+                })
 
 
-        //查询数据
-        forms:{
-            id:"",
-           carname: '',
-          price:"",
-          description:"",
+            },
+
+            //    分页
+            handleSizeChange(val) {
+                this.sizePage = val;
+                console.log(`每页 ${val} 条`);
+                this.selectAll();
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                console.log(`当前页: ${val}`);
+                this.selectAll();
+            },
+
+            handleExceed(files, fileList) {
+                this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+            },
+            handleChange (file, fileList) {
+                this.fileList = fileList;
+            },
+            //自定义上传文件
+            uploadFile (file) {
+                this.formData.append("file", file.file);
+            },
+            addCar() {//添加车辆信息
+                let formData = new FormData();
+                if(this.fileList.length < 3){
+                    this.$message.warning(`需上传三个图片包括(车身，车头和车尾)`);
+                    return
+                }
+                for (let i = 0; i < 3; i++) {
+                    if (i==0){
+                        formData.append("overall", this.fileList[i].raw);//拿到存在fileList的文件存放到formData中
+                    }else if(i==1){
+                        formData.append("front", this.fileList[i].raw);//拿到存在fileList的文件存放到formData中
+                    }else {
+                        formData.append("rear", this.fileList[i].raw);//拿到存在fileList的文件存放到formData中
+                    }
+                }
+                formData.append("carname", this.form.carname);
+                formData.append("models", this.form.models);
+                formData.append("description", this.form.description);
+                formData.append("price", this.form.price);
+                var _this = this;
+                axios.post("/cars/save", formData, {
+                    "Content-Type": "multipart/form-data;charset=utf-8"
+                }).then(res => {
+                    this.dialogVisible=false;//添加成功关闭窗口
+                    if (res.data === "SUCCESS") {
+                        this.$notify({
+                            title: '成功',
+                            message: '添加成功！',
+                            type: 'success',
+                            duration: 2000
+                        });
+                    }
+                    _this.form.carname=null;
+                    _this.form.description=null;
+                    _this.form.price=null;
+                    _this.form.models=null;
+                    _this.fileList=[];
+                    _this.selectAll();//重新查询一次所以数据！
+                })
+
+            },
+
+            //    弹框
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {
+                    });
+            },
+
+            //修改数据
+            handleEdit(row) {
+                this.updateform.id = row.id;
+                this.updateform.carname = row.carname;
+                this.updateform.models = row.models;
+                this.updateform.price = row.price;
+                this.updateform.description = row.description;
+                this.updatedialogVisible = true;
+            },
+
+            //删除数据
+            handleDelete(id) {
+                /*        console.log(id);
+                        this.deletedid=id;*/
+                this.$confirm('确认删除', '提示', {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(() => {
+                    var _this = this;
+                    axios.post("/cars/removeById?id=" + id).then(function (resp) {
+                        console.log(resp.data)
+                        if (resp.data.flag == true) {
+                            console.log(resp.data)
+                            _this.$message({
+                                message: "删除成功",
+                                type: "success"
+                            })
+                            _this.selectAll();
+                        }
+                    })
+                }).catch(() => {
+                    //取消删除
+                    this.$message({
+                        message: "已取消删除",
+                        type: "info"
+                    })
+                })
+            },
+
+
+            //修改数据
+            updatebrand() {
+                var _this = this;
+
+                axios({
+                    method: "post",
+                    url: "/cars/updateById",
+                    data: _this.updateform
+                }).then(function (resp) {
+                    if (resp.data.flag == true) {
+                        _this.updatedialogVisible = false,
+                            _this.$message({
+                                message: "修改成功",
+                                type: "success"
+                            }),
+                            _this.selectAll();
+                    }
+                })
+
+            },
         },
 
+        data() {
+            return {
+                // 图片上传变量
+                fileList: [],
+                formData: "",
 
-        //    添加弹框
-        dialogVisible: false,
+                form: {
+                    carname: '',
+                    description: '',
+                    models: '',
+                    price: '',
+                    current: this.currentPage,
+                    size: this.sizePage
+                },
 
-        //修改数据弹框
-        updatedialogVisible: false,
+                updateform: {
+                    id: 0,
+                    carname: '',
+                    description: '',
+                    models: '',
+                    price: '',
+                },
 
-        //记录修改的id
-        updateid:"",
+                tableData: [],
 
-        //记录删除id
-        deletedid:0,
-      }
-    }
+                carurl: [],
+
+                //复选框数组
+                multipleSelection: [],
+                selectids: [],
+
+                //分页总数
+                currentPage: 1,
+                sizePage: 5,
+                TotalCount: 0,
 
 
-  })
+                //查询数据
+                forms: {
+                    id: "",
+                    carname: '',
+                    price: "",
+                    description: "",
+                },
+
+
+                //    添加弹框
+                dialogVisible: false,
+
+                //修改数据弹框
+                updatedialogVisible: false,
+
+                //记录修改的id
+                updateid: "",
+
+                //记录删除id
+                deletedid: 0,
+            }
+        }
+
+
+    })
 
 </script>
 

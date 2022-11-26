@@ -1,7 +1,5 @@
 package com.wb.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,14 +10,11 @@ import com.wb.service.CarService;
 import com.wb.service.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -161,11 +156,15 @@ public class CarController {
     }
 
     @RequestMapping("/save")
-    public R save(@RequestBody Map<String,String> map){
-        String carname = map.get("carname");
-        String description = map.get("description");
-        double price = Double.parseDouble(map.get("price"));
-        String models = map.get("models");
+    public String save(HttpServletRequest request,
+                  @RequestParam("overall") MultipartFile overall,
+                  @RequestParam("front") MultipartFile front,
+                  @RequestParam("rear") MultipartFile rear) throws IOException {
+
+        String carname = request.getParameter("carname");
+        String description = request.getParameter("description");
+        double price = Double.parseDouble(request.getParameter("price"));
+        String models = request.getParameter("models");
         Car car = new Car(null,carname,models,description,price);
         boolean save = carService.save(car);
         LambdaQueryWrapper<Car> wrapper = new LambdaQueryWrapper<>();
@@ -173,9 +172,33 @@ public class CarController {
                 and(!"".equals(description)&&description!=null,wq->wq.like(Car::getDescription,description)).
                 and(!"".equals(models)&&models!=null,wq -> wq.like(Car::getModels,models)).
                 and(!"".equals(carname)&&carname!=null,wq -> wq.like(Car::getCarname,carname));
+
+        //保存三张图片
         Car car1 = carService.getOne(wrapper);
-        photoService.save(new Photo(null,null,null,null,car1.getId()));
-        return new R(save, null, "添加成功");
+        int id = car1.getId();
+        String overall_url = "D:/Big_HomeWork/springboot-car/src/main/webapp/img/"+id+".png";
+        String front_url = "D:/Big_HomeWork/springboot-car/src/main/webapp/img/"+id+"front.png";
+        String rear_url = "D:/Big_HomeWork/springboot-car/src/main/webapp/img/"+id+"rear.png";
+
+        BufferedOutputStream bf_overall = new BufferedOutputStream(new FileOutputStream(overall_url));
+        BufferedOutputStream bf_front = new BufferedOutputStream(new FileOutputStream(front_url));
+        BufferedOutputStream bf_rear = new BufferedOutputStream(new FileOutputStream(rear_url));
+
+        bf_overall.write(overall.getBytes());
+        bf_front.write(front.getBytes());
+        bf_rear.write(rear.getBytes());
+
+        bf_overall.close();
+        bf_front.close();
+        bf_rear.close();
+
+        photoService.save(
+                new Photo(null,
+                        "../img/"+id+".png",
+                        "../img/"+id+"front.png",
+                        "../img/"+id+"rear.png",
+                        id));
+        return "SUCCESS";
     }
 
     @RequestMapping("/updateById")
