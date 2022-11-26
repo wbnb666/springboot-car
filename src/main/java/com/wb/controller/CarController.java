@@ -145,16 +145,6 @@ public class CarController {
         return new R(list!=null,list,null);
     }
 
-
-    @RequestMapping("/removeById")
-    public R removeById(int id){
-        LambdaQueryWrapper<Photo> wrapper = new LambdaQueryWrapper();
-        wrapper.eq(Photo::getCarid,id);
-        photoService.remove(wrapper);
-        boolean b = carService.removeById(id);
-        return new R(b,null,"删除成功");
-    }
-
     @RequestMapping("/save")
     public String save(HttpServletRequest request,
                   @RequestParam("overall") MultipartFile overall,
@@ -213,10 +203,48 @@ public class CarController {
         return new R(b,null,"修改成功");
     }
 
+    @RequestMapping("/removeById")
+    public R removeById(int id){
+        LambdaQueryWrapper<Photo> wrapper = new LambdaQueryWrapper();
+        wrapper.eq(Photo::getCarid,id);
+        Photo photo = photoService.getOne(wrapper);
+        String[] photo_url = new String[3];
+
+        photo_url[0] = photo.getOverall().substring(2);
+        photo_url[1] = photo.getFront().substring(2);
+        photo_url[2] = photo.getRear().substring(2);
+
+        for (int i = 0; i < 3; i++) {
+            File file = new File("D:/Big_HomeWork/springboot-car/src/main/webapp"+photo_url[i]);
+            file.delete();
+        }
+        photoService.remove(wrapper);
+        boolean b = carService.removeById(id);
+        return new R(b,null,"删除成功");
+    }
+
     @RequestMapping("/removeByIds")
     public R deleteByIds(@RequestBody List<Integer> list) {
         LambdaQueryWrapper<Photo> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(list!=null,Photo::getCarid,list);
+        List<Photo> photoList = photoService.list(wrapper);
+
+        for (int i = 0; i < list.size(); i++) {
+            Photo photo = photoList.get(i);//取出每一组的三个照片进行删除本地操作！！！
+
+            String[] photo_url = new String[3];
+
+            photo_url[0] = photo.getOverall().substring(2);
+            photo_url[1] = photo.getFront().substring(2);
+            photo_url[2] = photo.getRear().substring(2);
+
+            for (int j = 0; j < 3; j++) {
+                File file = new File("D:/Big_HomeWork/springboot-car/src/main/webapp"+photo_url[j]);
+                file.delete();
+            }
+        }
+
+
         boolean b1 = photoService.remove(wrapper);
         boolean b = carService.removeByIds(list);
         return new R(b,null,"批量删除成功");
