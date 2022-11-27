@@ -5,5 +5,5 @@ import com.wb.domain.Car;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface CarDao extends BaseMapper<Car> {
+public interface CarDao extends BaseMapper<Car> {//BaseMapper已经包含了基础的常用的SQL语句
 }

@@ -5,5 +5,5 @@ import com.wb.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface UserDao extends BaseMapper<User>{
+public interface UserDao extends BaseMapper<User>{//BaseMapper已经包含了基础的常用的SQL语句
 }
