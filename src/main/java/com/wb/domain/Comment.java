@@ -19,13 +19,15 @@ public class Comment {
     private String photo2;
     private String photo3;
     private String username;
+    private int userid;
     private int carid;
 
-    public Comment(String conent, String createdate, double score, String username, int carid) {
+    public Comment(String conent, String createdate, double score, String username,int userid, int carid) {
         this.content = conent;
         this.createdate = createdate;
         this.score = score;
         this.username = username;
+        this.userid = userid;
         this.carid = carid;
     }
 

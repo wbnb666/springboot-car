@@ -138,4 +138,28 @@ public class FavorController {
         }
 
     }
+
+    @RequestMapping("getTop3_Collection")
+    public List  getTop3_Collection(){
+        List<Map> maps = favorService.selectTop3_Collection();
+        List<Integer> carids = new ArrayList<>();
+        for (int i = 0; i < maps.size(); i++) {
+            Map<Integer, Integer> map = maps.get(i);
+            Integer carid = map.get("carid");
+            carids.add(carid);
+        }
+        LambdaQueryWrapper<Photo> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(Photo::getCarid,carids);
+        List<Photo> photos = photoService.list(wrapper);
+        List result = new ArrayList<>();
+        result.add(maps);
+        result.add(photos);
+        return result;
+    }
+
+    @RequestMapping("selectCollectionByCarid")
+    public Map selectCollectionByCarid(Integer carid){
+        Map map = favorService.selectCollectionByCarid(carid);
+        return map;
+    }
 }

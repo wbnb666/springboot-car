@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface FavorDao{
@@ -20,4 +21,9 @@ public interface FavorDao{
     @Select("select carid from tb_favor where userid = #{userid}")
     List<Integer> selectIdsByUserId(@Param("userid") int userid);
 
+    @Select("SELECT COUNT(carid) collection,carid from tb_favor GROUP BY carid ORDER BY collection desc limit 3  -- 查找前三车的收藏量")
+    List<Map> selectTop3_Collection();
+
+    @Select("SELECT COUNT(carid) collection,carid from tb_favor where carid= #{carid}  -- 查找某辆车的收藏量")
+    Map<String,Integer> selectCollectionByCarid(@Param("carid") int carid);
 }

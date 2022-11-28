@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FavorServiceImpl implements FavorService {
@@ -34,5 +35,17 @@ public class FavorServiceImpl implements FavorService {
     public boolean removeCarFavorByIds(int userid, int[] carids) {
         return favorDao.removeCarFavorByIds(userid,carids);
 
+    }
+
+    @Override
+    public List<Map> selectTop3_Collection() {
+        List<Map> maps = favorDao.selectTop3_Collection();
+        return maps;
+    }
+
+    @Override
+    public Map selectCollectionByCarid(int carid) {
+        Map map = favorDao.selectCollectionByCarid(carid);
+        return map;
     }
 }
