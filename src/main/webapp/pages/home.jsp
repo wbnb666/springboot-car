@@ -16,10 +16,7 @@
         padding: 0;
     }
     body{
-        /*background: url("https://img.zcool.cn/community/018ed05a9bb7eea801219586d92711.png") center center no-repeat;*/
         background-size: 100%;
-        /*height: 100%;*/
-        /*background-attachment: fixed;*/
     }
 
     .transition-box {
